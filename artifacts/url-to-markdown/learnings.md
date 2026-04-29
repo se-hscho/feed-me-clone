@@ -7,3 +7,13 @@ applied: not-yet
 **상황**: Step 2, Task 의존성 식별 중. `url-input-form`, `url-to-markdown-page`, `export-menu`, `theme-toggle`가 여러 Task에 걸쳐 재사용되지만 plan상 선행 Task가 후행 Task의 UI/상태 기반을 만드는 구조였다.
 **판단**: `Task 1 -> 2 -> 3 -> 4 -> 5 -> 6` 순서를 유지했다. 입력 쉘과 상태 컨테이너를 먼저 만들면 이후 Task가 throwaway stub 없이 같은 컴포넌트 위에 적층된다.
 **다시 마주칠 가능성**: 중간 — 단일 페이지 feature는 shell-first 순서가 자주 유효하지만, API 선행이 필요한 경우엔 다시 판단이 필요하다.
+
+---
+category: refactor
+applied: not-yet
+---
+## 결과 상태 기능은 하나의 vertical slice로 묶어 커밋
+
+**상황**: Step 3 후반, Task 4-6 구현 중. export, prompt handoff, dark mode 검증이 모두 `url-to-markdown-page.tsx`와 `e2e/url-to-markdown.spec.ts`를 공유해 중간 상태를 따로 커밋하면 acceptance 기준이 반쪽만 만족됐다.
+**판단**: Task 4-6을 결과 상태 vertical slice 하나로 묶어 완성한 뒤 커밋하기로 했다. commit granularity보다 검증 가능한 사용자 흐름을 우선해 half-finished UI 상태를 남기지 않았다.
+**다시 마주칠 가능성**: 중간 — 단일 화면에 상호작용이 적층되는 feature는 task-by-task보다 slice-by-slice commit이 더 안전한 경우가 반복될 수 있다.

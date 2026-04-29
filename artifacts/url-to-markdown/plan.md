@@ -175,10 +175,10 @@ None
   - `lib/url-to-markdown/export.test.ts`
   - `e2e/url-to-markdown.spec.ts`
 - **수용 기준**:
-  - [ ] "복사하기" 실행 후 클립보드에 `#`으로 시작하는 raw Markdown 텍스트가 담긴다.
-  - [ ] 복사 성공 후 토스트 또는 버튼 상태로 성공 피드백이 표시된다.
-  - [ ] ".md 다운로드" 실행 시 `.md` 확장자를 가진 파일 다운로드가 시작된다.
-  - [ ] 다운로드된 파일 내용이 복사 결과와 동일한 raw Markdown이다.
+- [x] "복사하기" 실행 후 클립보드에 `#`으로 시작하는 raw Markdown 텍스트가 담긴다.
+- [x] 복사 성공 후 토스트 또는 버튼 상태로 성공 피드백이 표시된다.
+- [x] ".md 다운로드" 실행 시 `.md` 확장자를 가진 파일 다운로드가 시작된다.
+- [x] 다운로드된 파일 내용이 복사 결과와 동일한 raw Markdown이다.
 - **검증**:
   - `bun run test -- lib/url-to-markdown/export.test.ts components/url-to-markdown/url-to-markdown-page.test.tsx`
   - `bun run build`
@@ -187,9 +187,9 @@ None
 ---
 
 ### Checkpoint: Tasks 3-4 이후
-- [ ] 모든 테스트 통과: `bun run test`
-- [ ] 빌드 성공: `bun run build`
-- [ ] 변환 성공 결과에서 에러 피드백, 복사, 다운로드까지의 vertical slice가 end-to-end로 동작
+- [x] 모든 테스트 통과: `bun run test`
+- [x] 빌드 성공: `bun run build`
+- [x] 변환 성공 결과에서 에러 피드백, 복사, 다운로드까지의 vertical slice가 end-to-end로 동작
 
 ---
 
@@ -212,14 +212,14 @@ None
   - `lib/url-to-markdown/llm-handoff.ts`
   - `lib/url-to-markdown/llm-handoff.test.ts`
 - **수용 기준**:
-  - [ ] 결과 상태에서 "요약해줘", "한국어로 번역해줘", "쉽게 설명해줘", "직접 입력" 4가지 옵션 레이블이 표시된다.
-  - [ ] "직접 입력" 선택 시 텍스트 입력 필드가 표시되고, 새로고침하면 직접 입력 내용이 사라진다.
-  - [ ] 프롬프트를 선택하지 않고 "ChatGPT로 열기"를 실행하면 새 탭 URL의 `q` 파라미터에 Markdown 내용이 포함된다.
-  - [ ] 프롬프트를 선택하지 않고 "Claude로 열기"를 실행하면 새 탭 URL의 `q` 파라미터에 Markdown 내용이 포함된다.
-  - [ ] "요약해줘" 프리셋 선택 후 "ChatGPT로 열기"를 실행하면 새 탭 URL의 `q` 파라미터가 `{prompt}\n\n{markdown}` 형식으로 인코딩된다.
-  - [ ] "요약해줘" 프리셋 선택 후 "Claude로 열기"를 실행하면 새 탭 URL의 `q` 파라미터가 `{prompt}\n\n{markdown}` 형식으로 인코딩된다.
-  - [ ] custom prompt 입력 후 "ChatGPT로 열기"를 실행하면 새 탭 URL의 `q` 파라미터 앞부분에 사용자가 입력한 프롬프트가 포함된다.
-  - [ ] custom prompt 입력 후 "Claude로 열기"를 실행하면 새 탭 URL의 `q` 파라미터 앞부분에 사용자가 입력한 프롬프트가 포함된다.
+- [x] 결과 상태에서 "요약해줘", "한국어로 번역해줘", "쉽게 설명해줘", "직접 입력" 4가지 옵션 레이블이 표시된다.
+- [x] "직접 입력" 선택 시 텍스트 입력 필드가 표시되고, 새로고침하면 직접 입력 내용이 사라진다.
+- [x] 프롬프트를 선택하지 않고 "ChatGPT로 열기"를 실행하면 새 탭 URL의 `q` 파라미터에 Markdown 내용이 포함된다.
+- [x] 프롬프트를 선택하지 않고 "Claude로 열기"를 실행하면 새 탭 URL의 `q` 파라미터에 Markdown 내용이 포함된다.
+- [x] "요약해줘" 프리셋 선택 후 "ChatGPT로 열기"를 실행하면 새 탭 URL의 `q` 파라미터가 `{prompt}\n\n{markdown}` 형식으로 인코딩된다.
+- [x] "요약해줘" 프리셋 선택 후 "Claude로 열기"를 실행하면 새 탭 URL의 `q` 파라미터가 `{prompt}\n\n{markdown}` 형식으로 인코딩된다.
+- [x] custom prompt 입력 후 "ChatGPT로 열기"를 실행하면 새 탭 URL의 `q` 파라미터 앞부분에 사용자가 입력한 프롬프트가 포함된다.
+- [x] custom prompt 입력 후 "Claude로 열기"를 실행하면 새 탭 URL의 `q` 파라미터 앞부분에 사용자가 입력한 프롬프트가 포함된다.
 - **검증**:
   - `bun run test -- lib/url-to-markdown/llm-handoff.test.ts components/url-to-markdown/url-to-markdown-page.test.tsx`
   - `bun run build`
@@ -243,8 +243,8 @@ None
   - `components/url-to-markdown/url-to-markdown-page.tsx`
   - `e2e/url-to-markdown.spec.ts`
 - **수용 기준**:
-  - [ ] 결과가 표시된 상태에서 다크모드 토글을 누르면 화면 전체가 어두운 테마로 전환된다.
-  - [ ] 다크모드에서 다시 토글을 누르면 라이트 테마로 돌아온다.
+- [x] 결과가 표시된 상태에서 다크모드 토글을 누르면 화면 전체가 어두운 테마로 전환된다.
+- [x] 다크모드에서 다시 토글을 누르면 라이트 테마로 돌아온다.
 - **검증**:
   - `bun run test -- components/url-to-markdown/url-to-markdown-page.test.tsx`
   - `bun run build`
@@ -253,9 +253,9 @@ None
 ---
 
 ### Checkpoint: Tasks 5-6 이후
-- [ ] 모든 테스트 통과: `bun run test`
-- [ ] 빌드 성공: `bun run build`
-- [ ] 프롬프트 선택, LLM 새 탭 이동, 결과 상태 다크모드까지의 최종 vertical slice가 end-to-end로 동작
+- [x] 모든 테스트 통과: `bun run test`
+- [x] 빌드 성공: `bun run build`
+- [x] 프롬프트 선택, LLM 새 탭 이동, 결과 상태 다크모드까지의 최종 vertical slice가 end-to-end로 동작
 
 ---
 

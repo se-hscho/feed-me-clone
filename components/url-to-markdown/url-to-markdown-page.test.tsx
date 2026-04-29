@@ -27,6 +27,7 @@ function renderPage(props?: Partial<React.ComponentProps<typeof UrlToMarkdownPag
 describe("UrlToMarkdownPage conversion flow", () => {
   beforeEach(() => {
     mockedConvertUrl.mockReset()
+    vi.restoreAllMocks()
   })
 
   it("shows a loading state while conversion is pending", async () => {
@@ -107,4 +108,85 @@ describe("UrlToMarkdownPage conversion flow", () => {
     })
     expect(screen.getByRole("button", { name: "변환하기" })).toBeEnabled()
   })
+
+  it("copies raw markdown and shows success feedback", async () => {
+    const user = userEvent.setup()
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(window.navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    })
+
+    renderPage({
+      initialUrl: "https://example.com/article",
+      initialResult: {
+        sourceUrl: "https://example.com/article",
+        title: "테스트 문서",
+        author: "홍길동",
+        markdown: "# 테스트 문서\n\n본문입니다.",
+      },
+    })
+
+    await user.click(screen.getByRole("button", { name: "내보내기" }))
+    await user.click(screen.getByRole("menuitem", { name: "복사하기" }))
+
+    expect(writeText).toHaveBeenCalledWith("# 테스트 문서\n\n본문입니다.")
+    expect(await screen.findByText("Markdown을 복사했습니다.")).toBeInTheDocument()
+  })
+
+  it(
+    "shows prompt options and opens LLM urls with the selected prompt",
+    async () => {
+    const user = userEvent.setup()
+    const openSpy = vi.spyOn(window, "open").mockImplementation(() => null)
+
+    renderPage({
+      initialUrl: "https://example.com/article",
+      initialResult: {
+        sourceUrl: "https://example.com/article",
+        title: "테스트 문서",
+        author: "홍길동",
+        markdown: "# 테스트 문서\n\n본문입니다.",
+      },
+    })
+
+    expect(screen.getByRole("button", { name: "요약해줘" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "한국어로 번역해줘" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "쉽게 설명해줘" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "직접 입력" })).toBeInTheDocument()
+
+    await user.click(screen.getByRole("button", { name: "내보내기" }))
+    await user.click(screen.getByRole("menuitem", { name: "ChatGPT로 열기" }))
+    expect(openSpy).toHaveBeenLastCalledWith(
+      expect.stringContaining(encodeURIComponent("# 테스트 문서\n\n본문입니다.")),
+      "_blank",
+      "noopener,noreferrer"
+    )
+
+    await user.click(screen.getByRole("button", { name: "요약해줘" }))
+    await user.click(screen.getByRole("button", { name: "내보내기" }))
+    await user.click(screen.getByRole("menuitem", { name: "Claude로 열기" }))
+    expect(openSpy).toHaveBeenLastCalledWith(
+      expect.stringContaining(encodeURIComponent("요약해줘\n\n# 테스트 문서\n\n본문입니다.")),
+      "_blank",
+      "noopener,noreferrer"
+    )
+
+    await user.click(screen.getByRole("button", { name: "직접 입력" }))
+    await user.type(
+      screen.getByPlaceholderText("원하는 프롬프트를 입력하세요..."),
+      "핵심만 정리해줘"
+    )
+    await user.click(screen.getByRole("button", { name: "내보내기" }))
+    await user.click(screen.getByRole("menuitem", { name: "ChatGPT로 열기" }))
+    expect(openSpy).toHaveBeenLastCalledWith(
+      expect.stringContaining(
+        encodeURIComponent("핵심만 정리해줘\n\n# 테스트 문서\n\n본문입니다.")
+      ),
+      "_blank",
+      "noopener,noreferrer"
+    )
+    },
+    15_000
+  )
 })

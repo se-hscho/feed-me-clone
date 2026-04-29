@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { LoaderCircleIcon } from "lucide-react"
 
 import {
   Card,
@@ -9,18 +10,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { ResultPreview } from "@/components/url-to-markdown/result-preview"
 import { ThemeToggle } from "@/components/url-to-markdown/theme-toggle"
 import { UrlInputForm } from "@/components/url-to-markdown/url-input-form"
-
-type InitialResult = {
-  title: string
-  author?: string
-  markdown: string
-}
+import { convertUrl, type ConversionResult } from "@/lib/url-to-markdown/convert-url"
 
 type UrlToMarkdownPageProps = {
   initialUrl?: string
-  initialResult?: InitialResult | null
+  initialResult?: ConversionResult | null
 }
 
 export function UrlToMarkdownPage({
@@ -28,7 +25,19 @@ export function UrlToMarkdownPage({
   initialResult = null,
 }: UrlToMarkdownPageProps) {
   const [url, setUrl] = React.useState(initialUrl)
-  const [result, setResult] = React.useState<InitialResult | null>(initialResult)
+  const [result, setResult] = React.useState<ConversionResult | null>(initialResult)
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
+
+  const handleSubmit = React.useCallback(async () => {
+    setIsSubmitting(true)
+
+    try {
+      const nextResult = await convertUrl(url)
+      setResult(nextResult)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }, [url])
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-6 px-4 py-8">
@@ -52,32 +61,24 @@ export function UrlToMarkdownPage({
           <UrlInputForm
             value={url}
             onChange={setUrl}
+            onSubmit={handleSubmit}
             onClear={() => {
               setUrl("")
               setResult(null)
             }}
+            isSubmitting={isSubmitting}
           />
         </CardContent>
       </Card>
 
-      {result ? (
-        <section
-          aria-label="변환 결과"
-          className="rounded-xl border bg-card p-4 text-card-foreground"
-        >
-          <div className="border-b pb-3">
-            <h2 className="text-base font-semibold">{result.title}</h2>
-            {result.author ? (
-              <p className="text-sm text-muted-foreground">저자: {result.author}</p>
-            ) : null}
-          </div>
-          <div className="pt-3">
-            <pre className="overflow-x-auto whitespace-pre-wrap text-sm">
-              {result.markdown}
-            </pre>
-          </div>
+      {isSubmitting ? (
+        <section className="flex flex-col items-center gap-3 rounded-xl border border-dashed bg-card px-4 py-12 text-card-foreground">
+          <LoaderCircleIcon className="animate-spin text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">페이지를 가져오는 중...</p>
         </section>
       ) : null}
+
+      {result ? <ResultPreview result={result} /> : null}
     </main>
   )
 }

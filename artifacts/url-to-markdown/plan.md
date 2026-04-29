@@ -115,10 +115,10 @@ None
   - `components/url-to-markdown/url-to-markdown-page.tsx`
   - `lib/url-to-markdown/convert-url.test.ts`
 - **수용 기준**:
-  - [ ] `https://example.com` 입력 후 변환 버튼 클릭 또는 Enter 입력 시 로딩 상태가 화면에 나타난다.
-  - [ ] 변환 성공 시 결과 영역에 페이지 제목 텍스트가 표시된다.
-  - [ ] 저자 정보가 있는 응답이면 결과 영역 헤더에 저자 정보가 표시된다.
-  - [ ] 변환 성공 시 본문 내용이 렌더링된 HTML 형태의 미리보기로 표시된다.
+- [x] `https://example.com` 입력 후 변환 버튼 클릭 또는 Enter 입력 시 로딩 상태가 화면에 나타난다.
+- [x] 변환 성공 시 결과 영역에 페이지 제목 텍스트가 표시된다.
+- [x] 저자 정보가 있는 응답이면 결과 영역 헤더에 저자 정보가 표시된다.
+- [x] 변환 성공 시 본문 내용이 렌더링된 HTML 형태의 미리보기로 표시된다.
 - **검증**:
   - `bun run test -- lib/url-to-markdown/convert-url.test.ts components/url-to-markdown/url-to-markdown-page.test.tsx`
   - `bun run build`
@@ -127,9 +127,9 @@ None
 ---
 
 ### Checkpoint: Tasks 1-2 이후
-- [ ] 모든 테스트 통과: `bun run test`
-- [ ] 빌드 성공: `bun run build`
-- [ ] URL 입력 -> 변환 시작 -> 결과 미리보기 표시까지의 기본 vertical slice가 end-to-end로 동작
+- [x] 모든 테스트 통과: `bun run test`
+- [x] 빌드 성공: `bun run build`
+- [x] URL 입력 -> 변환 시작 -> 결과 미리보기 표시까지의 기본 vertical slice가 end-to-end로 동작
 
 ---
 

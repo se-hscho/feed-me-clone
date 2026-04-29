@@ -11,6 +11,7 @@ type UrlInputFormProps = {
   onChange: (value: string) => void
   onSubmit?: () => void
   onClear: () => void
+  isSubmitting?: boolean
 }
 
 export function UrlInputForm({
@@ -18,6 +19,7 @@ export function UrlInputForm({
   onChange,
   onSubmit,
   onClear,
+  isSubmitting = false,
 }: UrlInputFormProps) {
   return (
     <form
@@ -40,6 +42,7 @@ export function UrlInputForm({
               autoFocus
               placeholder="URL을 붙여넣으세요..."
               value={value}
+              disabled={isSubmitting}
               onChange={(event) => onChange(event.target.value)}
               className="h-11 pr-12 pl-9"
             />
@@ -50,6 +53,7 @@ export function UrlInputForm({
                 size="icon-sm"
                 className="absolute top-1/2 right-1 -translate-y-1/2"
                 aria-label="URL 지우기"
+                disabled={isSubmitting}
                 onClick={onClear}
               >
                 <XIcon />
@@ -59,8 +63,8 @@ export function UrlInputForm({
         </Field>
       </FieldGroup>
 
-      <Button type="submit" className="h-11 w-full">
-        변환하기
+      <Button type="submit" className="h-11 w-full" disabled={isSubmitting}>
+        {isSubmitting ? "변환 중..." : "변환하기"}
       </Button>
     </form>
   )

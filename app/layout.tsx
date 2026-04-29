@@ -6,9 +6,9 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Kanban Todo",
-  description: "Kanban board application",
-};
+  title: "feed-me",
+  description: "Convert web pages to markdown and send them to your LLM.",
+}
 
 export default function RootLayout({
   children,
@@ -23,5 +23,5 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }

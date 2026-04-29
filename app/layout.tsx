@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "sonner"
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Kanban Todo",
-  description: "Kanban board application",
-};
+  title: "feed-me",
+  description: "Convert web pages to markdown and send them to your LLM.",
+}
 
 export default function RootLayout({
   children,
@@ -20,8 +21,9 @@ export default function RootLayout({
       <body className={`${inter.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           {children}
+          <Toaster richColors />
         </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }

@@ -149,10 +149,10 @@ None
   - `components/url-to-markdown/url-to-markdown-page.test.tsx`
   - `package.json`
 - **수용 기준**:
-  - [ ] `not-a-url` 입력 후 변환 시도 시 유효하지 않은 URL임을 알리는 토스트 메시지가 나타난다.
-  - [ ] 잘못된 URL 에러가 발생한 뒤에도 입력 필드에는 기존 URL 문자열이 유지된다.
-  - [ ] 접속 실패 또는 변환 실패 응답이면 실패 원인을 설명하는 토스트 메시지가 나타난다.
-  - [ ] 실패가 끝나면 로딩 인디케이터가 사라져 다시 시도할 수 있다.
+- [x] `not-a-url` 입력 후 변환 시도 시 유효하지 않은 URL임을 알리는 토스트 메시지가 나타난다.
+- [x] 잘못된 URL 에러가 발생한 뒤에도 입력 필드에는 기존 URL 문자열이 유지된다.
+- [x] 접속 실패 또는 변환 실패 응답이면 실패 원인을 설명하는 토스트 메시지가 나타난다.
+- [x] 실패가 끝나면 로딩 인디케이터가 사라져 다시 시도할 수 있다.
 - **검증**:
   - `bun run test -- components/url-to-markdown/url-to-markdown-page.test.tsx`
   - `bun run build`

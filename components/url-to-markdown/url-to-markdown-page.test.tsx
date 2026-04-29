@@ -4,6 +4,7 @@ import * as React from "react"
 import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { ThemeProvider } from "next-themes"
+import { Toaster } from "sonner"
 
 import { UrlToMarkdownPage } from "@/components/url-to-markdown/url-to-markdown-page"
 import { convertUrl } from "@/lib/url-to-markdown/convert-url"
@@ -18,6 +19,7 @@ function renderPage(props?: Partial<React.ComponentProps<typeof UrlToMarkdownPag
   return render(
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
       <UrlToMarkdownPage {...props} />
+      <Toaster />
     </ThemeProvider>
   )
 }
@@ -74,5 +76,35 @@ describe("UrlToMarkdownPage conversion flow", () => {
     expect(screen.getByText("저자: Hong Gildong")).toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "들어가며" })).toBeInTheDocument()
     expect(screen.getByText(/AI 도구를 일상 개발 워크플로에 통합하는 방법/)).toBeInTheDocument()
+  })
+
+  it("shows a toast and keeps the input when the url is invalid", async () => {
+    mockedConvertUrl.mockRejectedValue(new Error("유효하지 않은 URL입니다."))
+
+    const user = userEvent.setup()
+    renderPage()
+
+    await user.type(screen.getByLabelText("URL"), "not-a-url")
+    await user.click(screen.getByRole("button", { name: "변환하기" }))
+
+    expect(await screen.findByText("유효하지 않은 URL입니다.")).toBeInTheDocument()
+    expect(screen.getByLabelText("URL")).toHaveValue("not-a-url")
+    expect(screen.getByRole("button", { name: "변환하기" })).toBeEnabled()
+  })
+
+  it("shows a failure toast and clears loading when conversion fails", async () => {
+    mockedConvertUrl.mockRejectedValue(new Error("페이지를 가져오지 못했습니다."))
+
+    const user = userEvent.setup()
+    renderPage()
+
+    await user.type(screen.getByLabelText("URL"), "https://example.com")
+    await user.click(screen.getByRole("button", { name: "변환하기" }))
+
+    expect(await screen.findByText("페이지를 가져오지 못했습니다.")).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.queryByText("페이지를 가져오는 중...")).not.toBeInTheDocument()
+    })
+    expect(screen.getByRole("button", { name: "변환하기" })).toBeEnabled()
   })
 })

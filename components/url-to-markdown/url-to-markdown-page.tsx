@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { LoaderCircleIcon } from "lucide-react"
+import { toast } from "sonner"
 
 import {
   Card,
@@ -34,6 +35,10 @@ export function UrlToMarkdownPage({
     try {
       const nextResult = await convertUrl(url)
       setResult(nextResult)
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "페이지를 변환하지 못했습니다."
+      toast.error(message)
     } finally {
       setIsSubmitting(false)
     }

@@ -5,6 +5,8 @@ export type PromptSelection = {
   customPrompt?: string
 }
 
+export const MAX_LLM_QUERY_LENGTH = 4_000
+
 const PROMPTS: Record<Exclude<PromptMode, "custom" | "none">, string> = {
   summary: "요약해줘",
   "translate-ko": "한국어로 번역해줘",
@@ -29,4 +31,8 @@ export function buildLlmUrl(provider: "chatgpt" | "claude", query: string) {
     provider === "chatgpt" ? "https://chatgpt.com/?q=" : "https://claude.ai/new?q="
 
   return `${base}${encodeURIComponent(query)}`
+}
+
+export function isLlmQueryTooLong(query: string) {
+  return query.length > MAX_LLM_QUERY_LENGTH
 }

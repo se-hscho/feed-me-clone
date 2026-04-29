@@ -1,4 +1,9 @@
-import { buildLlmQuery, buildLlmUrl } from "@/lib/url-to-markdown/llm-handoff"
+import {
+  buildLlmQuery,
+  buildLlmUrl,
+  isLlmQueryTooLong,
+  MAX_LLM_QUERY_LENGTH,
+} from "@/lib/url-to-markdown/llm-handoff"
 
 describe("llm handoff helpers", () => {
   it("returns markdown as-is when no prompt is selected", () => {
@@ -20,5 +25,10 @@ describe("llm handoff helpers", () => {
       encodeURIComponent("요약해줘\n\n# Title")
     )
     expect(buildLlmUrl("claude", "# Title")).toContain(encodeURIComponent("# Title"))
+  })
+
+  it("flags oversized llm queries before opening a url", () => {
+    expect(isLlmQueryTooLong("a".repeat(MAX_LLM_QUERY_LENGTH + 1))).toBe(true)
+    expect(isLlmQueryTooLong("a".repeat(MAX_LLM_QUERY_LENGTH))).toBe(false)
   })
 })

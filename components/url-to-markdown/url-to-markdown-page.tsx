@@ -18,7 +18,12 @@ import { ThemeToggle } from "@/components/url-to-markdown/theme-toggle"
 import { UrlInputForm } from "@/components/url-to-markdown/url-input-form"
 import { convertUrl, type ConversionResult } from "@/lib/url-to-markdown/convert-url"
 import { copyMarkdown, createMarkdownFilename, downloadMarkdown } from "@/lib/url-to-markdown/export"
-import { buildLlmQuery, buildLlmUrl, type PromptMode } from "@/lib/url-to-markdown/llm-handoff"
+import {
+  buildLlmQuery,
+  buildLlmUrl,
+  isLlmQueryTooLong,
+  type PromptMode,
+} from "@/lib/url-to-markdown/llm-handoff"
 
 type UrlToMarkdownPageProps = {
   initialUrl?: string
@@ -37,6 +42,7 @@ export function UrlToMarkdownPage({
 
   const handleSubmit = React.useCallback(async () => {
     setIsSubmitting(true)
+    setResult(null)
 
     try {
       const nextResult = await convertUrl(url)
@@ -71,6 +77,10 @@ export function UrlToMarkdownPage({
     (provider: "chatgpt" | "claude") => {
       if (!result) return
       const query = buildLlmQuery(result.markdown, promptSelection)
+      if (isLlmQueryTooLong(query)) {
+        toast.error("Markdown이 너무 길어 URL로 바로 열 수 없습니다.")
+        return
+      }
       window.open(buildLlmUrl(provider, query), "_blank", "noopener,noreferrer")
     },
     [promptSelection, result]

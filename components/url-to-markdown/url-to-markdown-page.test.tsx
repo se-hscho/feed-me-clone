@@ -109,6 +109,27 @@ describe("UrlToMarkdownPage conversion flow", () => {
     expect(screen.getByRole("button", { name: "변환하기" })).toBeEnabled()
   })
 
+  it("clears stale results before a failed reconversion attempt", async () => {
+    mockedConvertUrl.mockRejectedValue(new Error("페이지를 가져오지 못했습니다."))
+
+    const user = userEvent.setup()
+    renderPage({
+      initialUrl: "https://example.com/old",
+      initialResult: {
+        sourceUrl: "https://example.com/old",
+        title: "이전 결과",
+        markdown: "# 이전 결과",
+      },
+    })
+
+    await user.clear(screen.getByLabelText("URL"))
+    await user.type(screen.getByLabelText("URL"), "https://example.com/new")
+    await user.click(screen.getByRole("button", { name: "변환하기" }))
+
+    expect(screen.queryByRole("region", { name: "변환 결과" })).not.toBeInTheDocument()
+    expect(await screen.findByText("페이지를 가져오지 못했습니다.")).toBeInTheDocument()
+  })
+
   it("copies raw markdown and shows success feedback", async () => {
     const user = userEvent.setup()
     const writeText = vi.fn().mockResolvedValue(undefined)
@@ -189,4 +210,26 @@ describe("UrlToMarkdownPage conversion flow", () => {
     },
     15_000
   )
+
+  it("blocks llm handoff when the markdown is too long for a query url", async () => {
+    const user = userEvent.setup()
+    const openSpy = vi.spyOn(window, "open").mockImplementation(() => null)
+
+    renderPage({
+      initialUrl: "https://example.com/article",
+      initialResult: {
+        sourceUrl: "https://example.com/article",
+        title: "긴 문서",
+        markdown: `# 긴 문서\n\n${"a".repeat(5_000)}`,
+      },
+    })
+
+    await user.click(screen.getByRole("button", { name: "내보내기" }))
+    await user.click(screen.getByRole("menuitem", { name: "ChatGPT로 열기" }))
+
+    expect(openSpy).not.toHaveBeenCalled()
+    expect(
+      await screen.findByText("Markdown이 너무 길어 URL로 바로 열 수 없습니다.")
+    ).toBeInTheDocument()
+  })
 })
